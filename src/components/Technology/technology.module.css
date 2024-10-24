@@ -1,0 +1,18 @@
+.technology-grid{
+  margin-top:2rem;
+  --_gap:clamp(8px,2cqi,16px);
+  display : grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+  gap:var(--_gap);
+  justify-content: center;
+} 
+
+.technology-grid-item h3{
+  color:var(--secondary);
+}
+.technology-grid-item p{
+  margin-top:1rem;
+  font-size:0.8rem;
+}
+
+

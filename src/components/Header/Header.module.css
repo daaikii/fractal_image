@@ -1,0 +1,40 @@
+.header-wrapper{
+  background-color: var(--primary);
+  color:var(--background);
+}
+
+.header{
+  max-width:1600px;
+  margin:0 auto;
+  padding:1rem 0 0.9rem 0;
+  display:grid;
+  grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content,1fr);
+  & :last-child{
+    justify-self: end;
+  }
+  align-items: end;
+}
+
+.header h1{
+  font-size:2rem;
+}
+
+.header ul{
+  margin: 0 auto;
+  display:flex;
+  gap:24px;
+}
+
+.header a {
+  color: var(--background);
+  border-bottom:solid 1px;
+}
+.header a:hover,.header a:focus {
+  color: var(--accent);
+  outline:none;
+  border: none;
+}
+
+.header-login{
+  font-size:1.5rem;
+}
