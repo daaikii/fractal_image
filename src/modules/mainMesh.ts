@@ -45,9 +45,15 @@ export default class MainMesh {
         uTexture1: { value: this.textures[0] },
         uTexture2: { value: null },
         uProgress: { value: 0 },
+        uMouseX: { value: 0 },
         uResolution: { value: new THREE.Vector2(this.size.width, this.size.height) },
       }
     })
     this.mesh = new THREE.Mesh(plane, material)
+  }
+
+  public updateSize(size: { width: number; height: number }) {
+    this.size = size;
+    this.mesh.material.uniforms.uResolution.value = new THREE.Vector2(this.size.width, this.size.height)
   }
 }

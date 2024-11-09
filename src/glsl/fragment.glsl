@@ -1,3 +1,4 @@
+uniform float uMouseX;
 uniform float uProgress;
 uniform sampler2D uTexture1;
 uniform sampler2D uTexture2;
@@ -6,43 +7,50 @@ uniform vec2 uResolution;
 varying vec2 vUv;
 
 void main(){
-    vec2 uv = gl_FragCoord.xy / uResolution.xy;
+    vec2 uv = (gl_FragCoord.xy / uResolution.xy)*2.0-1.0;
+
+    // アスペクト比を維持する------
+    vec2 newBaseUV = vUv-vec2(0.5);
+    float baseAspect=1.0;
+    float aspect = uResolution.x/uResolution.y;
+    if(aspect<1.0){
+    newBaseUV *= aspect;
+    }
+    newBaseUV += vec2(0.5);
+    //------------------------------
     
-    // スクロール量を0~1に制限
-    float p = fract(uProgress); 
-    vec4 fcolor;
 
-    // 逆方向へのスクロール量を計算
-    float p1 = p - 1.0;
+    // 移動量を0~0.25に制限
+    float x = uMouseX*0.25; 
+    // 列の動きをデフォルトで少しだけ動くようにする。
+    float dx = x*0.01; 
+    // 列によって動きを変更する
+    dx -= step(-0.2 + x, uv.x) * 0.1 * x;
+    dx -= step(-0.4 + x, uv.x) * 0.1 * x;
+    dx -= step(-0.6 + x, uv.x) * 0.1 * x;
+    dx -= step(-0.8 + x, uv.x) * 0.1 * x;
+    dx -= step(-0.1 + x, uv.x) * 0.1 * x;
+    dx -= step(-0.3 + x, uv.x) * 0.1 * x;
+    dx -= step(-0.5 + x, uv.x) * 0.1 * x;
+    dx -= step(-0.9 + x, uv.x) * 0.1 * x;
+    dx -= step(-1.0 + x, uv.x) * 0.1 * x;
+    dx += step(0.2  + x, uv.x) * 0.1 * x;
+    dx += step(0.4  + x, uv.x) * 0.1 * x;
+    dx += step(0.6  + x, uv.x) * 0.1 * x;
+    dx += step(0.8  + x, uv.x) * 0.1 * x;
+    dx += step(0.1  + x, uv.x) * 0.1 * x;
+    dx += step(0.3  + x, uv.x) * 0.1 * x;
+    dx += step(0.5  + x, uv.x) * 0.1 * x;
+    dx += step(0.9  + x, uv.x) * 0.1 * x;
+    dx += step(1.0  + x, uv.x) * 0.1 * x;
 
-    // スライド方向に応じたUVの位置調整
-    vec2 position = step(0.0, p) * uv + step(0.0, -p) * (1.0 - uv);
+    vec4 tex1 = texture2D(uTexture1, vec2(newBaseUV.x+dx , vUv.y));
+    vec4 tex2 = texture2D(uTexture2, vec2(newBaseUV.x+dx , vUv.y));
 
-    // texture1 (現在のテクスチャ)
-    float dx1 = p * 0.8; // pに応じて右スライド量を調整
-    float vert1 = abs(p * 0.3);
-    dx1 -= step(0.2 - vert1, position.x) * 0.3 * p;
-    dx1 -= step(0.4 - vert1, position.x) * 0.3 * p;
-    dx1 += step(0.6 - vert1, position.x) * 0.3 * p;
-    dx1 += step(0.8 - vert1, position.x) * 0.3 * p;
-    vec4 tex1 = texture2D(uTexture1, vec2(vUv.x + dx1, vUv.y));
 
-    // UVの範囲で次のテクスチャを表示するかどうかを決定
-    float bounds = step(0.0, 1.0 - (uv.x + p)) * step(0.0, uv.x + p);
-    fcolor += tex1 * bounds;
+    // uProgressによる線形補間
+    vec4 fcolor = mix(tex1, tex2, uProgress);
 
-    // texture2 (次のテクスチャ)
-    float dx2 = p1 * 0.8; // 逆方向のテクスチャスライド調整
-    float vert2 = abs(p1 * 0.3);
-    dx2 -= step(0.2 - vert2, position.x) * 0.3 * p1;
-    dx2 -= step(0.4 - vert2, position.x) * 0.3 * p1;
-    dx2 += step(0.6 - vert2, position.x) * 0.3 * p1;
-    dx2 += step(0.8 - vert2, position.x) * 0.3 * p1;
-    vec4 tex2 = texture2D(uTexture2, vec2(vUv.x + dx2, vUv.y));
-
-    // UVの範囲で次のテクスチャを表示するかどうかを決定
-    float bounds2 = step(0.0, 1.0 - (uv.x + p1)) * step(0.0, uv.x + p1);
-    fcolor += tex2 * bounds2;
 
     // 最終的な色を設定
     gl_FragColor = fcolor;
