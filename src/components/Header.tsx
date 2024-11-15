@@ -11,7 +11,7 @@ export default function Header() {
   const { navDisplay, setNavDisplay } = useNav() as NavContextType
 
   useEffect(() => {
-    function wheelEvent(e: Event) {
+    function wheelEvent() {
       if (!headerRef.current) return
       const scroll = window.scrollY;
       const scrollThreshold = 50;

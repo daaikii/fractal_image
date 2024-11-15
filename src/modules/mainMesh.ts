@@ -18,7 +18,7 @@ export default class MainMesh {
   private size: Size
   private images: string[]
   public textures: THREE.Texture[]
-  public mesh: THREE.Mesh
+  public mesh!: THREE.Mesh<THREE.PlaneGeometry,THREE.ShaderMaterial>
   constructor(size: Size) {
     this.size = size
 

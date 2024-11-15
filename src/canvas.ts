@@ -10,13 +10,13 @@ export default class Canvas {
   private canvas: HTMLCanvasElement
   private scene: THREE.Scene
   // Renderer
-  private camera: THREE.PerspectiveCamera
-  private orthoCamera: THREE.OrthographicCamera
-  private renderer: THREE.WebGLRenderer
-  private size: { width: number, height: number }
-  private aspectRatio: number;
+  // private camera: THREE.PerspectiveCamera
+  private orthoCamera!: THREE.OrthographicCamera
+  private renderer!: THREE.WebGLRenderer
+  private size!: { width: number, height: number }
+  // private aspectRatio!: number;
   // Obj
-  private mainMesh: MainMesh;
+  private mainMesh!: MainMesh;
   private currentIndex: number;
   //raycaster
   private isChange: boolean
@@ -52,7 +52,7 @@ export default class Canvas {
       width: document.documentElement.clientWidth,
       height: window.innerHeight
     }
-    this.aspectRatio = this.size.width / this.size.height;
+    // this.aspectRatio = this.size.width / this.size.height;
     // this.camera = new THREE.PerspectiveCamera(50, this.aspectRatio, 1, 1000)
     this.orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.orthoCamera.position.z = 1;
@@ -72,7 +72,7 @@ export default class Canvas {
       width: document.documentElement.clientWidth,
       height: window.innerHeight,
     }
-    this.aspectRatio = this.size.width / this.size.height;
+    // this.aspectRatio = this.size.width / this.size.height;
     // this.camera.aspect = this.aspectRatio;
     // this.camera.updateProjectionMatrix();
     this.orthoCamera.updateProjectionMatrix();
@@ -97,7 +97,7 @@ export default class Canvas {
     this.raycaster.setFromCamera(this.pointer, this.orthoCamera);
     const intersects = this.raycaster.intersectObject(this.mainMesh.mesh)
     if (intersects.length > 0) {
-      this.mainMesh.mesh.material.uniforms.uMouseX.value = intersects[0].point.x;
+      (this.mainMesh.mesh.material as unknown as THREE.ShaderMaterial).uniforms.uMouseX.value = intersects[0].point.x;
     }
   }
   private onTouchMove(e: TouchEvent) {
@@ -109,7 +109,7 @@ export default class Canvas {
       this.raycaster.setFromCamera(this.pointer, this.orthoCamera);
       const intersects = this.raycaster.intersectObject(this.mainMesh.mesh);
       if (intersects.length > 0) {
-        this.mainMesh.mesh.material.uniforms.uMouseX.value = intersects[0].point.x;
+        (this.mainMesh.mesh.material as unknown as THREE.ShaderMaterial).uniforms.uMouseX.value = intersects[0].point.x;
       }
     }
   }
@@ -131,7 +131,7 @@ export default class Canvas {
   public changeImage(direction: number) {
     if (this.isChange) return
     this.isChange = true;
-    const uniforms = this.mainMesh.mesh.material.uniforms
+    const uniforms = (this.mainMesh.mesh.material as unknown as THREE.ShaderMaterial).uniforms
     const length = this.mainMesh.textures.length
     const nextIndex = (this.currentIndex + direction + length) % length;
     uniforms.uTexture2.value = this.mainMesh.textures[nextIndex]

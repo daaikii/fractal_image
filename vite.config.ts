@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     glsl({
-      include: /\.(vs|fs|frag|vert|glsl)$/,
+      include: "**/*.glsl",
       compress: true,
     }),
   ],

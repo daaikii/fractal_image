@@ -38,7 +38,7 @@ body {
   --_line_height_2xl:clamp(4rem, 7vw + 1rem, 10rem);
   
   font-size:var(--_text_sm);
-  color:(var(--text));
+  color:var(--text);
   font-family: 'Noto Sans JP', 'Roboto', sans-serif;
 }
 
@@ -240,6 +240,7 @@ img{
   font-size:var(--_text_2xl);
   text-wrap: balance;
   color:var(--background);
+  text-shadow: 1px 1px 2px black;
 }
 .about canvas{
   z-index:-1;
@@ -385,7 +386,6 @@ img{
 
 .faq_wrapper{
   background-color:var(--background);
-  height:min(max-content,100vh);
 }
 .faq{
   max-width: var(--_max_content);
